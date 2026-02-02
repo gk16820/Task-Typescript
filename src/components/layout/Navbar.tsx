@@ -29,7 +29,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
                 </button>
 
                 {/* Search */}
-                <div className="relative hidden md:block">
+                {/* <div className="relative hidden md:block">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-dark-400" />
                     <input
                         type="text"
@@ -38,7 +38,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="w-80 pl-10 pr-4 py-2.5 bg-dark-50 dark:bg-dark-700 border border-transparent rounded-xl text-dark-800 dark:text-white placeholder-dark-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:bg-white dark:focus:bg-dark-800 transition-all duration-200"
                     />
-                </div>
+                </div> */}
             </div>
 
             {/* Right section */}

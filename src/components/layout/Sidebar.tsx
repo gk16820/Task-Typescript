@@ -20,6 +20,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ onCreateProject }) => {
     const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
     const location = useLocation();
     const { user, logout } = useAuth();
 
@@ -104,49 +105,63 @@ export const Sidebar: React.FC<SidebarProps> = ({ onCreateProject }) => {
                 ))}
             </nav>
 
-            {/* User Profile */}
+            {/* User Profile with Dropdown */}
             <div className="p-4 border-t border-dark-100 dark:border-dark-700">
-                <div
-                    className={`
-            flex items-center gap-3 p-3 rounded-xl
-            hover:bg-dark-50 dark:hover:bg-dark-700 transition-colors cursor-pointer
-            ${isCollapsed ? 'justify-center' : ''}
-          `}
-                >
-                    {user && <Avatar name={user.name} size="sm" />}
-                    {!isCollapsed && user && (
-                        <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-dark-800 dark:text-white truncate">
-                                {user.name}
-                            </p>
-                            <p className="text-xs text-dark-500 truncate">{user.email}</p>
+                <div className="relative">
+                    {/* Dropdown Menu - Positioned Above */}
+                    {!isCollapsed && isProfileDropdownOpen && (
+                        <div className="absolute bottom-full left-4 right-4 mb-2 py-1 bg-white dark:bg-dark-700 rounded-lg shadow-lg border border-dark-100 dark:border-dark-600 animate-fadeIn">
+                            <Link
+                                to="/profile"
+                                onClick={() => setIsProfileDropdownOpen(false)}
+                                className="flex items-center gap-3 px-4 py-2.5 text-sm text-dark-600 dark:text-dark-300 hover:bg-dark-50 dark:hover:bg-dark-600 transition-colors"
+                            >
+                                <Settings className="w-4 h-4" />
+                                <span>Settings</span>
+                            </Link>
+                            <button
+                                onClick={() => {
+                                    setIsProfileDropdownOpen(false);
+                                    logout();
+                                }}
+                                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                            >
+                                <LogOut className="w-4 h-4" />
+                                <span>Logout</span>
+                            </button>
                         </div>
                     )}
-                </div>
 
-                <div className={`mt-2 flex ${isCollapsed ? 'justify-center' : 'gap-2'}`}>
-                    {!isCollapsed && (
-                        <Link
-                            to="/profile"
-                            className="flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm text-dark-600 dark:text-dark-300 hover:bg-dark-100 dark:hover:bg-dark-700 rounded-lg transition-colors"
-                        >
-                            <Settings className="w-4 h-4" />
-                            Settings
-                        </Link>
-                    )}
-                    <button
-                        onClick={logout}
+                    {/* Profile Section */}
+                    <div
+                        onClick={() => !isCollapsed && setIsProfileDropdownOpen(!isProfileDropdownOpen)}
                         className={`
-              flex items-center justify-center gap-2 px-3 py-2 text-sm 
-              text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 
-              rounded-lg transition-colors
-              ${isCollapsed ? '' : 'flex-1'}
-            `}
-                        title="Logout"
+            flex items-center gap-3 p-3 rounded-xl
+            hover:bg-dark-50 dark:hover:bg-dark-700 transition-colors 
+            ${isCollapsed ? 'justify-center' : 'cursor-pointer'}
+          `}
                     >
-                        <LogOut className="w-4 h-4" />
-                        {!isCollapsed && <span>Logout</span>}
-                    </button>
+                        {user && <Avatar name={user.name} size="sm" />}
+                        {!isCollapsed && user && (
+                            <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-dark-800 dark:text-white truncate">
+                                    {user.name}
+                                </p>
+                                <p className="text-xs text-dark-500 truncate">{user.email}</p>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Collapsed state - show logout icon only */}
+                    {isCollapsed && (
+                        <button
+                            onClick={logout}
+                            className="w-full mt-2 flex items-center justify-center p-2 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+                            title="Logout"
+                        >
+                            <LogOut className="w-4 h-4" />
+                        </button>
+                    )}
                 </div>
             </div>
         </aside>
