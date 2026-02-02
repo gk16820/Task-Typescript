@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, FolderKanban, MoreVertical } from 'lucide-react';
+import { Users, FolderKanban, MoreVertical, Edit } from 'lucide-react';
 import { Team } from '../../types';
 import { Card, AvatarGroup } from '../common';
 import { useData } from '../../context';
@@ -17,6 +17,7 @@ export const TeamCard: React.FC<TeamCardProps> = ({
     onDelete,
 }) => {
     const { users, projects } = useData();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const teamMembers = [team.ownerId, ...team.memberIds]
         .map((id) => users.find((u) => u.id === id))
@@ -37,15 +38,36 @@ export const TeamCard: React.FC<TeamCardProps> = ({
                         >
                             <Users className="w-6 h-6" style={{ color: team.color }} />
                         </div>
-                        <button
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                            }}
-                            className="p-1.5 opacity-0 group-hover:opacity-100 hover:bg-dark-100 dark:hover:bg-dark-700 rounded-lg transition-all"
-                        >
-                            <MoreVertical className="w-4 h-4 text-dark-400" />
-                        </button>
+                        <div className="relative">
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    setIsMenuOpen(!isMenuOpen);
+                                }}
+                                className="p-1.5 opacity-0 group-hover:opacity-100 hover:bg-dark-100 dark:hover:bg-dark-700 rounded-lg transition-all"
+                            >
+                                <MoreVertical className="w-4 h-4 text-dark-400" />
+                            </button>
+
+                            {/* Dropdown Menu */}
+                            {isMenuOpen && (
+                                <div className="absolute right-0 top-full mt-1 py-1 bg-white dark:bg-dark-700 rounded-lg shadow-lg border border-dark-100 dark:border-dark-600 animate-fadeIn z-10 min-w-[120px]">
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            setIsMenuOpen(false);
+                                            onEdit?.();
+                                        }}
+                                        className="w-full flex items-center gap-2 px-4 py-2 text-sm text-dark-600 dark:text-dark-300 hover:bg-dark-50 dark:hover:bg-dark-600 transition-colors"
+                                    >
+                                        <Edit className="w-4 h-4" />
+                                        <span>Edit</span>
+                                    </button>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     {/* Title & Description */}

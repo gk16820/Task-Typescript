@@ -114,7 +114,11 @@ export const Projects: React.FC = () => {
                     }
                 >
                     {filteredProjects.map((project) => (
-                        <ProjectCard key={project.id} project={project} />
+                        <ProjectCard
+                            key={project.id}
+                            project={project}
+                            onEdit={() => handleEdit(project)}
+                        />
                     ))}
                 </div>
             )}
